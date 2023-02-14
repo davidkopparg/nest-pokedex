@@ -29,7 +29,7 @@ export class PokemonService {
   }
 
   findAll() {
-    //return this.pokemonModel.;
+   return this.pokemonModel.find();
   }
 
   async findOne(id: string) {
