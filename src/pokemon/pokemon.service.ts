@@ -5,6 +5,7 @@ import { NotFoundError } from 'rxjs';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { Pokemon } from './entities/pokemon.entity';
+import { PaginationDto } from '../common/dto/pagination.dto';
 
 @Injectable()
 export class PokemonService {
@@ -28,8 +29,18 @@ export class PokemonService {
     
   }
 
-  findAll() {
-   return this.pokemonModel.find();
+  findAll(PaginationDto: PaginationDto) {
+
+    const {limit = 110, offset = 0} = PaginationDto;
+
+
+   return this.pokemonModel.find()
+    .limit(limit)
+    .skip (offset)
+    .sort({
+      no: 1
+    })
+    .select("-__v");
   }
 
   async findOne(id: string) {
@@ -70,6 +81,7 @@ export class PokemonService {
     try {
       await pokemon.updateOne ( updatePokemonDto );
       return { ...pokemon.toJSON(),...updatePokemonDto};
+      //return updatePokemonDto
     } catch (error) {
       this.handleExceptions( error );
      
